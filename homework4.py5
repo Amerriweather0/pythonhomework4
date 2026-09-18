@@ -1,0 +1,112 @@
+from graphics import *
+import math
+
+# Logistic function
+def logistic(x, k):
+    return k * x * (1 - x)
+
+
+# Create graphics window
+win = GraphWin("Logistic Function", 800, 600)
+
+# -------------------------
+# Input labels and entries
+# -------------------------
+
+start_label = Text(Point(100, 40), "Starting Value:")
+start_label.draw(win)
+
+start_entry = Entry(Point(200, 40), 10)
+start_entry.setText("0.1")
+start_entry.draw(win)
+
+k_label = Text(Point(300, 40), "k Value:")
+k_label.draw(win)
+
+k_entry = Entry(Point(390, 40), 10)
+k_entry.setText("3.9")
+k_entry.draw(win)
+
+# -------------------------
+# Graph button
+# -------------------------
+
+button = Rectangle(Point(500, 20), Point(600, 60))
+button.draw(win)
+
+button_text = Text(Point(550, 40), "Graph")
+button_text.draw(win)
+
+# -------------------------
+# Graph area
+# -------------------------
+
+graph_left = 75
+graph_right = 750
+graph_top = 100
+graph_bottom = 550
+
+# Draw axes
+x_axis = Line(
+    Point(graph_left, graph_bottom),
+    Point(graph_right, graph_bottom)
+)
+x_axis.draw(win)
+
+y_axis = Line(
+    Point(graph_left, graph_top),
+    Point(graph_left, graph_bottom)
+)
+y_axis.draw(win)
+
+
+# -------------------------
+# Main program
+# -------------------------
+
+while True:
+
+    click = win.getMouse()
+
+    # Check if button was clicked
+    if (500 <= click.getX() <= 600 and
+            20 <= click.getY() <= 60):
+
+        # If button says Exit, close window
+        if button_text.getText() == "Exit":
+            break
+
+        # Get values from Entry boxes
+        x = float(start_entry.getText())
+        k = float(k_entry.getText())
+
+        # Store previous point
+        previous_point = None
+
+        # Plot 100 points
+        for i in range(100):
+
+            y = logistic(x, k)
+
+            # Convert values to screen coordinates
+            screen_x = graph_left + i * 6.7
+            screen_y = graph_bottom - y * 400
+
+            current_point = Point(screen_x, screen_y)
+
+            # Draw line between adjacent points
+            if previous_point is not None:
+                line = Line(previous_point, current_point)
+                line.draw(win)
+
+            # Save current point
+            previous_point = current_point
+
+            # Next logistic value
+            x = y
+
+        # Change button to Exit
+        button_text.setText("Exit")
+
+# Close window
+win.close()
